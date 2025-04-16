@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historical Terms Quiz</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            min-height: 300px;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .term {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            cursor: pointer;
+            padding: 15px;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            background-color: #ecf0f1;
+            transition: all 0.3s ease;
+        }
+        .term:hover {
+            background-color: #d6eaf8;
+            transform: scale(1.02);
+        }
+        .definition {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-left: 4px solid #3498db;
+            border-radius: 4px;
+            display: none;
+        }
+        .new-btn {
+            display: block;
+            margin: 20px auto 0;
+            padding: 10px 20px;
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .new-btn:hover {
+            background-color: #27ae60;
+        }
+        .instructions {
+            margin-top: 30px;
+            font-style: italic;
+            color: #7f8c8d;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Zgodovinski pojmi</h1>
+        <div id="term" class="term">Klikni za začetek</div>
+        <div id="definition" class="definition"></div>
+        <button id="newTerm" class="new-btn" style="display: none;">Nov pojem</button>
+        <p class="instructions">Klikni na pojem za prikaz razlage</p>
+    </div>
+
+    <script>
+        // Database of terms and definitions
+        const termsData = [
+            {
+                term: "Oton I.",
+                definition: "Nemški kralj in cesar (912–973), leta 962 ustanovi Sveto rimsko cesarstvo. Pomemben za širjenje krščanstva in utrditev cesarske oblasti v Srednji Evropi."
+            },
+            {
+                term: "Leto 1095 n. št.",
+                definition: "Leto, ko papež Urban II. na koncilu v Clermontu pozove k prvemu križarskemu pohodu, s ciljem osvoboditve Jeruzalema izpod muslimanske oblasti."
+            },
+            {
+                term: "Ferdinand Magellan",
+                definition: "Portugalski pomorščak (ok. 1480–1521), začel prvo potovanje okoli sveta (1519). Dokazal, da je Zemlja okrogla, čeprav sam poti ni končal (ubil ga je na Filipinih)."
+            },
+            {
+                term: "30-letna vojna",
+                definition: "Versko-politična vojna v Evropi (1618–1648), predvsem na ozemlju današnje Nemčije. Zaključena z Vestfalskim mirom, ki je prinesel versko svobodo in spremembe v razmerjih sil."
+            },
+            {
+                term: "Velika shizma",
+                definition: "Leta 1054 se krščanska Cerkev razdeli na rimskokatoliško in pravoslavno vejo zaradi verskih in političnih razlik (npr. o papeževem primatu)."
+            },
+            {
+                term: "Humanizem",
+                definition: "Umanistično gibanje med renesanso (14.–16. stol.), poudarja človeka, razum, izobrazbo, umetnost in znanje iz antike. V središču ni več samo Bog, ampak tudi človek."
+            },
+            {
+                term: "Vasco da Gama",
+                definition: "Portugalski raziskovalec, ki je leta 1498 prvi po morju dosegel Indijo. S tem je odprl novo trgovsko pot in začel portugalsko pomorsko prevlado v Indijskem oceanu."
+            },
+            {
+                term: "Janičarji",
+                definition: "Elitna pehota Osmanskega cesarstva, sestavljena iz krščanskih dečkov, ki so jih s silo vzgojili v muslimanske vojake. Zvesti sultanu, bili so njegova osebna vojska."
+            },
+            {
+                term: "Morana",
+                definition: "Slovanska boginja smrti in zime. Častili so jo poganski Slovani, kasneje pa je bilo njeno češčenje zamenjano s krščanstvom."
+            },
+            {
+                term: "Azteki",
+                definition: "Mezoameriška civilizacija v današnji Mehiki, uničil jih je Pizzaro, čeprav bolj znan po osvojitvi Inkov – Azteke je premagal Cortez (možna napaka v nalogi)."
+            },
+            {
+                term: "Karolingi",
+                definition: "Frankovska dinastija, ki jo vodi Karel Veliki. V času Karolingov je prišlo do oblikovanja zgodnjega srednjeveškega evropskega imperija s središčem v Aachnu."
+            },
+            {
+                term: "Justinijan",
+                definition: "Bizantinski cesar (vladal 527–565), znan po Justinianovem zakoniku, gradnji cerkve Hagia Sophia in prizadevanju za obnovo Rimskega imperija."
+            },
+            {
+                term: "Henrik VIII.",
+                definition: "Angleški kralj, ki je zaradi ločitve s prvo ženo ustanovil anglikansko cerkev (odcepitev od papeža). Vladal v 16. stoletju."
+            },
+            {
+                term: "De Medici",
+                definition: "Mogočna italijanska bančniška in politična družina iz Firenc, glavni pokrovitelji renesanse, podpirali umetnike kot sta Michelangelo in Leonardo."
+            },
+            {
+                term: "Bostonska čajanka",
+                definition: "Dogodek leta 1773, ko ameriški kolonisti protestirajo proti britanskemu davku na čaj. S tem se začne Ameriška revolucija."
+            },
+            {
+                term: "Istanbul (1453)",
+                definition: "Leta 1453 Osmansko cesarstvo zavzame Konstantinopel, mesto preimenujejo v Istanbul. S tem se konča Bizantinsko cesarstvo."
+            },
+            {
+                term: "Karel Veliki",
+                definition: "Frankovski kralj (vladal 768–814) in cesar Svetega rimskega cesarstva od leta 800. Združil večji del Zahodne Evrope, uvedel šole, pismenost in krščanstvo. Spodbudil t. i. karolinško renesanso – kulturno in versko prenovo."
+            },
+            {
+                term: "Inkvizicija",
+                definition: "Cerkev ustanovi inkvizicijo v 13. stol., da bi preganjala krivoverce (tiste, ki so nasprotovali katoliški veri). Najbolj znana je španska inkvizicija (1478–1800), ki je uporabljala zaslišanja in mučenja za izsiljevanje priznanj."
+            },
+            {
+                term: "Zgodovinsko obdobje križarskih pohodov",
+                definition: "Traja od 1095 do konca 13. stol., ko papež Urban II. pozove kristjane, da osvobodijo Sveto deželo (Jeruzalem). Vključuje več pohodov. Posledice: večja moč Cerkve, širjenje trgovine, stiki z Vzhodom, padec fevdalizma."
+            },
+            {
+                term: "Karantanci",
+                definition: "Slovansko pleme, živelo na območju današnje južne Avstrije in Slovenije v 7.–9. stol. Imeli so lastno kneževino in demokratičen obred ustoličevanja kneza v slovenskem jeziku. Kasneje sprejmejo krščanstvo (knez Borut in sin Gorazd)."
+            },
+            {
+                term: "Al Andaluz in čas Cordobskega emirata",
+                definition: "Al Andaluz = muslimanska Španija (711–1492). Cordobski emirat nastane 756, leta 929 postane kalifat. Cordoba postane eno najnaprednejših mest Evrope – razvili so znanost, matematiko, medicino, arhitekturo."
+            },
+            {
+                term: "Fevdalizem",
+                definition: "Družbeni sistem srednjega veka (pribl. 9.–15. stol.). Temelji na odnosu med gospodarjem in vazalom, kjer kralj podeli zemljo plemičem, ti pa naprej nižje sloje. Kmetje (podložniki) živijo na zemlji in delajo v zameno za zaščito. Življenje je bilo težko in odvisno od fevdalca."
+            },
+            {
+                term: "Renesansa",
+                definition: "Kulturno in umetniško gibanje (14.–16. stol.), ki pomeni »ponovno rojstvo« antike. Poudarja človeka, znanje, umetnost, znanost, logiko in lepoto. Začne se v Italiji, podpirajo jo družine kot de Medici."
+            },
+            {
+                term: "Reformacija",
+                definition: "Versko gibanje, ki ga sproži Martin Luther leta 1517. Kritika Cerkve in odpustkov. Posledica: nastanek protestantskih cerkva (npr. evangeličani). Povzroči verske vojne in razkol v krščanstvu."
+            },
+            {
+                term: "Turški upadi",
+                definition: "Napadi Osmanskega imperija na evropska ozemlja, tudi na Slovence, med 15. in 17. stoletjem. Pripeljejo do utrdb in protiturške obrambe. Veliko ljudi je bilo odpeljanih v suženjstvo."
+            },
+            {
+                term: "Matija Gubec",
+                definition: "Vodja kmečkega upora v Hrvaški in Sloveniji leta 1573. Boril se je za pravice kmetov proti fevdalcem. Ujet in kruto usmrčen – danes velja za simbol upora."
+            },
+            {
+                term: "Leto 1053 n. št.",
+                definition: "Približno leto velike shizme (uradno 1054) – razkol med vzhodno pravoslavno in zahodno katoliško Cerkvijo. Verske in politične razlike med Rimom in Konstantinoplom."
+            },
+            {
+                term: "Marija Terezija",
+                definition: "Avstrijska cesarica (vladala 1740–1780). Uvedla šolsko reformo, centralizacijo oblasti in izboljšala položaj kmetov. Pomembna razsvetljenska vladarica Habsburške monarhije."
+            },
+            {
+                term: "Anglikanska vera",
+                definition: "Nastane v Angliji po razhodu kralja Henrika VIII. s katoliško Cerkvijo, ker mu papež ni dovolil ločitve. Kralj postane vodja cerkve. To je protestantska vera z nekaterimi katoliškimi elementi."
+            },
+            {
+                term: "Urban II.",
+                definition: "Papež, ki je leta 1095 pozval k prvemu križarskemu pohodu, da bi osvobodili Jeruzalem iz muslimanskih rok. S tem se začne obdobje križarskih vojn."
+            },
+            {
+                term: "Kodeks",
+                definition: "Zbirka zakonov ali besedil, pogosto v knjižni obliki (nasprotje zvitkov). Pomembni kodeksi so pravni dokumenti, npr. Justinianov zakonik ali srednjeveški rokopisi."
+            },
+            {
+                term: "Drakar",
+                definition: "Tipična dolga ladja vikingov, z vesli in jadri, uporabljena za plovbo in napade. Značilna je zmajeva glava na premcu. Hitre, okretne in primerne za reke ter odprto morje."
+            },
+            {
+                term: "Barok",
+                definition: "Umetnostni slog (17.–18. stol.), znan po veličini, čustvenosti, dramatiki in okrašenosti. Prisoten v slikarstvu, arhitekturi, glasbi (npr. Bach). Izraža moč Cerkve in kraljev."
+            },
+            {
+                term: "Vikingi",
+                definition: "Skandinavska ljudstva, znani po ropih, trgovanju in raziskovanju (8.–11. stol.). Ustanavljali so naselbine (npr. Islandija, Normandija) in vplivali na evropsko zgodovino."
+            },
+            {
+                term: "Jeruzalem",
+                definition: "Sveto mesto treh ver (judaizem, krščanstvo, islam). Glavni cilj križarskih pohodov. Pogosto prizorišče verskih sporov in zasedb."
+            },
+            {
+                term: "Versailles",
+                definition: "Razkošna palača pri Parizu, zgrajena pod Ludvikom XIV., simbol absolutizma. Tam je bil leta 1919 podpisan Versailleski mir, ki je končal 1. svetovno vojno."
+            },
+            {
+                term: "Srednjeveško mesto",
+                definition: "Mesto v srednjem veku, obdano z obzidjem, z ozkimi ulicami, trgom, cerkvijo in gradom. Razvijala so se okoli trgovskih poti in samostanov. Pomembna za trgovino in obrt."
+            },
+            {
+                term: "Sveto rimsko nemško cesarstvo",
+                definition: "Velika država v srednji Evropi, ustanovljena leta 962 z Otonom I. Povezovala je nemške, italijanske in slovenske dežele. Obstajala do 1806, bila je versko in politično razdeljena."
+            },
+            {
+                term: "Kralj Ludvik XIV.",
+                definition: "Francoski kralj (vladal 1643–1715), znan kot \"Sončni kralj\". Vladal kot absolutist, zgradil palačo Versailles in centraliziral državo."
+            },
+            {
+                term: "Leto 800 n. št.",
+                definition: "Leta 800 papež krona Karla Velikega za cesarja. Obnovi se ideja rimskega cesarstva, kar vpliva na nastanek Svetega rimskega cesarstva."
+            },
+            {
+                term: "Medičejci",
+                definition: "Mogočna bančniška in politična družina iz Firenc. Pokrovitelji renesančnih umetnikov (npr. Michelangelo). Vplivali so na italijansko in evropsko politiko."
+            },
+            {
+                term: "Krištof Kolumb",
+                definition: "Italijanski pomorščak v službi Španije, leta 1492 \"odkrije Ameriko\" (pristane na Bahamih). S tem začne dobro poznano dobo raziskovanj in kolonizacije."
+            },
+            {
+                term: "Katarina Velika",
+                definition: "Ruska carica (vladala 1762–1796), razsvetljena absolutistka, širila ruski imperij, modernizirala državo. Podpirala umetnost, znanost in izobraževanje."
+            },
+            {
+                term: "Svarog",
+                definition: "Slovanski bog ognja, neba in kovaštva, del stare poganske vere Slovanov. Eden glavnih bogov v slovanski mitologiji."
+            },
+            {
+                term: "Leto 622 n. št.",
+                definition: "Začetek islamskega koledarja – hidžra, ko se Mohamed preseli iz Meke v Medino. Ta dogodek pomeni začetek islamske skupnosti (umme)."
+            },
+            {
+                term: "Marija Antoaneta",
+                definition: "Francoska kraljica, žena Ludvika XVI. Med francosko revolucijo postane simbol razkošja in brezbrižnosti plemstva. Leta 1793 giljotinirana."
+            },
+            {
+                term: "Robespierre",
+                definition: "Voditelj francoske revolucije in jakobincev. Vodil dobo terorja, kjer so s giljotino usmrtili nasprotnike revolucije. Leta 1794 je bil tudi sam usmrčen."
+            },
+            {
+                term: "Habsburžani",
+                definition: "Vplivna vladarska dinastija v Evropi, izvirajo iz Švice. Vladali so v Avstriji, Španiji, Madžarski, imeli tudi slovenske dežele. Zelo pomembni v evropski zgodovini."
+            },
+            {
+                term: "Medina",
+                definition: "Mesto v Savdski Arabiji, kamor se je preselil Mohamed leta 622. Drugo najsvetejše mesto islama, tu je zgradil prvo muslimansko skupnost."
+            },
+            {
+                term: "Giljotina",
+                definition: "Naprav za usmrtitve z odsekom glave, pogosto uporabljena v času francoske revolucije. Simbol revolucionarnega nasilja in \"enakosti pred smrtjo\"."
+            },
+            {
+                term: "Slovani",
+                definition: "Velika etnična skupina narodov v Evropi, prvotno iz vzhodne Evrope. Danes vključujejo npr. Slovence, Ruse, Poljake, Srbe. V zgodnjem srednjem veku so ustanavljali kneževine, med njimi tudi Karantanijo."
+            }
+        ];
+
+        // Elements
+        const termElement = document.getElementById('term');
+        const definitionElement = document.getElementById('definition');
+        const newTermButton = document.getElementById('newTerm');
+
+        // Current term index
+        let currentIndex = -1;
+        let isShowingDefinition = false;
+
+        // Function to get random term
+        function getRandomTerm() {
+            // Get a different term than the current one
+            let newIndex;
+            do {
+                newIndex = Math.floor(Math.random() * termsData.length);
+            } while (newIndex === currentIndex && termsData.length > 1);
+            
+            currentIndex = newIndex;
+            return termsData[currentIndex];
+        }
+
+        // Function to display a new term
+        function displayNewTerm() {
+            isShowingDefinition = false;
+            const termData = getRandomTerm();
+            termElement.textContent = termData.term;
+            definitionElement.textContent = '';
+            definitionElement.style.display = 'none';
+            newTermButton.style.display = 'none';
+        }
+
+        // Function to show definition
+        function showDefinition() {
+            if (!isShowingDefinition && currentIndex !== -1) {
+                isShowingDefinition = true;
+                definitionElement.textContent = termsData[currentIndex].definition;
+                definitionElement.style.display = 'block';
+                newTermButton.style.display = 'block';
+            }
+        }
+
+        // Event listeners
+        termElement.addEventListener('click', function() {
+            if (currentIndex === -1) {
+                // First click - start the quiz
+                displayNewTerm();
+            } else if (!isShowingDefinition) {
+                // Show definition when term is clicked
+                showDefinition();
+            }
+        });
+
+        newTermButton.addEventListener('click', displayNewTerm);
+
+        // Initialize with instruction
+        termElement.textContent = "Klikni za začetek";
+    </script>
+</body>
+</html>
