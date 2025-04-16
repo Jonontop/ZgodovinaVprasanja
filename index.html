@@ -1,4 +1,4 @@
-d<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -345,12 +345,12 @@ d<!DOCTYPE html>
             },
             {
                 term: "Bizantinsko cesarstvo",
-                definition: ""
+                definition: "Cesarstvo na vzhodu (grčija, turčija) ki nastane po razpadu rimskega cesarstva"
             },
-            {
+            <!-- {
                 term: "",
                 definition: ""
-            },
+            }, -->
             
         ];
 
@@ -407,6 +407,28 @@ d<!DOCTYPE html>
         });
 
         newTermButton.addEventListener('click', displayNewTerm);
+
+        // Add spacebar event listener
+        document.addEventListener('keydown', function(event) {
+            // Check if the key pressed is spacebar
+            if (event.code === 'Space' || event.key === ' ') {
+                // Prevent default spacebar behavior (page scrolling)
+                event.preventDefault();
+                
+                // If we haven't started yet, start the quiz
+                if (currentIndex === -1) {
+                    displayNewTerm();
+                } 
+                // If definition is not showing, show it
+                else if (!isShowingDefinition) {
+                    showDefinition();
+                } 
+                // If definition is already showing, get a new term
+                else {
+                    displayNewTerm();
+                }
+            }
+        });
 
         // Initialize with instruction
         termElement.textContent = "Klikni za začetek";
